@@ -1,6 +1,6 @@
 ---
-import { Icon } from 'astro-icon/components';
-import type { Brands as Props } from '~/types';
+// Import tipe ImageType dari types.d.ts
+import type { Brands as Props, Image as ImageType } from '~/types';
 import Image from '~/components/common/Image.astro';
 import Headline from '~/components/ui/Headline.astro';
 import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
@@ -9,79 +9,114 @@ const {
   title = '',
   subtitle = '',
   tagline = '',
-  icons = [],
   images = [],
   id,
   isDark = false,
   classes = {},
   bg = await Astro.slots.render('bg'),
 } = Astro.props;
+
+const chunkSize = 5;
+// Definisikan tipe array secara spesifik: Array of Array of ImageType
+const chunks: ImageType[][] = [];
+
+if (images && images.length > 0) {
+  for (let i = 0; i < images.length; i += chunkSize) {
+    chunks.push(images.slice(i, i + chunkSize));
+  }
+}
 ---
 
-<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-full mx-auto ${classes?.container ?? ''}`} bg={bg}>
+<WidgetWrapper id={id} isDark={isDark} containerClass={`max-w-6xl mx-auto ${classes?.container ?? ''}`} bg={bg}>
   <Headline title={title} subtitle={subtitle} tagline={tagline} />
 
-  <div class="relative flex overflow-x-hidden group">
-    <div class="animate-marquee flex items-center gap-12 whitespace-nowrap py-4">
-      {
-        images &&
-          images.map(
-            (image) =>
-              image.src && (
-                <div class="flex justify-center items-center mx-4 min-w-[150px]">
+  <div class="relative w-full h-24 overflow-hidden flex justify-center items-center">
+    {
+      chunks.length > 0 ? (
+        chunks.map((chunk, groupIndex) => (
+          <div
+            class={`brand-group absolute inset-0 flex justify-center items-center gap-8 md:gap-12 transition-opacity duration-500
+          ${groupIndex === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0'}`}
+            data-index={groupIndex}
+          >
+            {/* Gunakan tipe spesifik ImageType di sini */}
+            {chunk.map((image: ImageType, imgIndex: number) => (
+              <div
+                class="brand-item transform transition-all duration-500 ease-in-out"
+                style={`transition-delay: ${imgIndex * 100}ms`}
+              >
+                {image.src && (
                   <Image
                     src={image.src}
                     alt={image.alt || ''}
-                    class="max-h-12 opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    class="max-h-12 w-auto opacity-50 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0"
                     width={150}
-                    height={48}
+                    height={60}
                     layout="fixed"
                     style="object-fit: contain;"
                   />
-                </div>
-              )
-          )
-      }
-
-      {/* Tampilkan Icons jika ada */}
-      {icons && icons.map((icon) => <Icon name={icon} class="mx-4 w-12 h-auto text-gray-500" />)}
-
-      {
-        images &&
-          images.map(
-            (image) =>
-              image.src && (
-                <div class="flex justify-center items-centerMx-4 min-w-[150px]">
-                  <Image
-                    src={image.src}
-                    alt={image.alt || ''}
-                    class="max-h-12 opacity-80 hover:opacity-100 transition-opacity duration-300"
-                    width={150}
-                    height={48}
-                    layout="fixed"
-                    style="object-fit: contain;"
-                  />
-                </div>
-              )
-          )
-      }
-      {icons && icons.map((icon) => <Icon name={icon} class="mx-4 w-12 h-auto text-gray-500" />)}
-    </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ))
+      ) : (
+        <div class="text-center text-gray-400">Tidak ada logo ditampilkan</div>
+      )
+    }
   </div>
 </WidgetWrapper>
 
-<style>
-  .animate-marquee {
-    animation: marquee 40s linear infinite;
-  }
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const groups = document.querySelectorAll('.brand-group');
+    const totalGroups = groups.length;
+    let currentIndex = 0;
 
-  /* Animasi berjalan dari 0% ke -50% (setengah panjang track karena ada 2 set logo) */
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-</style>
+    // Jika cuma 1 grup atau tidak ada, tidak perlu animasi
+    if (totalGroups <= 1) return;
+
+    setInterval(() => {
+      // 1. Identifikasi Grup Sekarang & Selanjutnya
+      // Kita gunakan casting 'as HTMLElement' agar TypeScript tidak komplain
+      const currentGroup = groups[currentIndex] as HTMLElement;
+      const nextIndex = (currentIndex + 1) % totalGroups;
+      const nextGroup = groups[nextIndex] as HTMLElement;
+
+      // 2. Animasi KELUAR (Slide Up & Fade Out) untuk Grup Sekarang
+      const currentItems = currentGroup.querySelectorAll('.brand-item');
+      currentItems.forEach((item) => {
+        item.classList.add('-translate-y-8', 'opacity-0');
+      });
+
+      // Tunggu sebentar, lalu sembunyikan grup total
+      setTimeout(() => {
+        currentGroup.classList.remove('opacity-100', 'z-10');
+        currentGroup.classList.add('opacity-0', 'z-0');
+
+        // Reset posisi item grup lama
+        currentItems.forEach((item) => {
+          item.classList.remove('-translate-y-8', 'opacity-0');
+          item.classList.add('translate-y-8', 'opacity-0');
+        });
+      }, 500);
+
+      // 3. Animasi MASUK (Slide Up dari bawah) untuk Grup Selanjutnya
+      setTimeout(() => {
+        nextGroup.classList.remove('opacity-0', 'z-0');
+        nextGroup.classList.add('opacity-100', 'z-10');
+
+        const nextItems = nextGroup.querySelectorAll('.brand-item');
+        nextItems.forEach((item) => {
+          setTimeout(() => {
+            item.classList.remove('translate-y-8', 'opacity-0');
+            item.classList.add('translate-y-0', 'opacity-100');
+          }, 50);
+        });
+      }, 600);
+
+      // Update Index
+      currentIndex = nextIndex;
+    }, 4000);
+  });
+</script>

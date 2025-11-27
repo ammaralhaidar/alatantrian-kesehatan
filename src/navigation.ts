@@ -57,7 +57,7 @@ export const headerData = {
     },
   ],
   actions: [
-    { text: 'Kunjungi Website Utama', href: 'https:alatantrian.com', target: '_blank', icon: 'tabler:world-www' },
+    { text: 'Kunjungi Website Utama', href: 'https://alatantrian.com', target: '_blank', icon: 'tabler:world-www' },
   ],
 };
 
