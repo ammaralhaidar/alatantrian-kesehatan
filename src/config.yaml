@@ -1,6 +1,6 @@
 site:
-  name: AstroWind
-  site: 'https://astrowind.vercel.app'
+  name: AlatAntrian Kesehatan
+  site: 'https://alatantrian-kesehatan.vercel.app'
   base: '/'
   trailingSlash: false
 
@@ -9,14 +9,14 @@ site:
 # Default SEO metadata
 metadata:
   title:
-    default: AstroWind
-    template: '%s — AstroWind'
-  description: "\U0001F680 Suitable for Startups, Small Business, Sass Websites, Professional Portfolios, Marketing Websites, Landing Pages & Blogs."
+    default: 'Solusi Antrian RS & Puskesmas Terintegrasi BPJS'
+    template: '%s — Alat Antrian Kesehatan'
+  description: "\U0001F680 Spesialis mesin antrian kiosk, software bridging Mobile JKN, dan sistem manajemen antrian untuk Rumah Sakit."
   robots:
     index: true
     follow: true
   openGraph:
-    site_name: AstroWind
+    site_name: Alat Antrian Kesehatan
     images:
       - url: '~/assets/images/default.png'
         width: 1200

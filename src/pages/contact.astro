@@ -5,74 +5,74 @@ import ContactUs from '~/components/widgets/Contact.astro';
 import Features2 from '~/components/widgets/Features2.astro';
 
 const metadata = {
-  title: 'Contact',
+  title: 'Hubungi Kami',
 };
 ---
 
 <Layout metadata={metadata}>
   <!-- HeroText Widget ******************* -->
 
-  <HeroText tagline="Contact" title="Let's Connect!" />
+  <HeroText
+    tagline="Kontak"
+    title="Mari Diskusikan Kebutuhan Anda"
+    subtitle="Tim konsultan kami siap memberikan solusi antrian terbaik untuk Rumah Sakit Anda."
+  />
 
   <ContactUs
     id="form"
-    title="Drop us a message today!"
-    subtitle="For quicker answers, explore our FAQs section. You may find the solution you're looking  for right there! If not, our support team is delighted to help you."
+    title="Kirim Pesan"
+    subtitle="Isi formulir di bawah ini untuk meminta penawaran harga, jadwal demo, atau konsultasi teknis."
     inputs={[
       {
         type: 'text',
         name: 'name',
-        label: 'Name',
+        label: 'Nama Lengkap',
       },
       {
         type: 'email',
         name: 'email',
-        label: 'Email',
+        label: 'Alamat Email',
+      },
+      {
+        type: 'text',
+        name: 'instansi',
+        label: 'Nama Instansi / RS',
       },
     ]}
     textarea={{
-      label: 'Message',
+      label: 'Pesan / Kebutuhan',
     }}
     disclaimer={{
-      label:
-        'By submitting this contact form, you acknowledge and agree to the collection of your personal information.',
+      label: 'Dengan mengirimkan formulir ini, Anda setuju untuk dihubungi oleh tim sales kami.',
     }}
-    description="Our support team typically responds within 24 business hours."
+    description="Tim kami akan membalas pesan Anda maksimal 1x24 jam kerja."
+    button="Kirim Pesan"
   />
 
   <!-- Features2 Widget ************** -->
 
   <Features2
-    title="We are here to help!"
+    title="Saluran Layanan"
     items={[
       {
-        title: 'General support',
-        description: `Chat with us for inquiries related to account management, website navigation, payment issues, accessing purchased templates or general questions about the website's functionality.`,
+        title: 'Sales & Marketing',
+        description: `Konsultasi produk baru dan penawaran harga.`,
+        icon: 'tabler:shopping-cart',
       },
       {
-        title: 'Contact sales',
-        description:
-          'Chat with us for questions about purchases, customization options, licensing for commercial use, inquiries about specific template, etc.',
-      },
-      {
-        title: 'Technical support',
-        description:
-          'Chat with us when facing issues like template installation, problems editing difficulties, compatibility issues with software or download errors, or other technical challenges related to using the templates.',
-      },
-      {
-        title: 'Phone',
-        description: '+1 (234) 567-890',
+        title: 'Technical Support',
+        description: 'Bantuan teknis untuk kendala instalasi atau penggunaan software.',
         icon: 'tabler:headset',
       },
       {
-        title: 'Email',
-        description: 'contact@support.com',
-        icon: 'tabler:mail',
+        title: 'Hotline (WhatsApp)',
+        description: '+62 812-3456-7890',
+        icon: 'tabler:brand-whatsapp',
       },
       {
-        title: 'Location',
-        description: '1234 Lorem Ipsum St, 12345, Miami, EEUU',
-        icon: 'tabler:map-pin',
+        title: 'Email',
+        description: 'sales@alatantrian.com',
+        icon: 'tabler:mail',
       },
     ]}
   />

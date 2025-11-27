@@ -1,9 +1,12 @@
 ---
 import { Icon } from 'astro-icon/components';
-
 import Image from '~/components/common/Image.astro';
 import PostTags from '~/components/blog/Tags.astro';
 import SocialShare from '~/components/common/SocialShare.astro';
+import TableOfContents from '~/components/blog/TableOfContents.astro'; // Import TOC
+import AuthorProfile from '~/components/blog/AuthorProfile.astro'; // Import Author
+import ReadingProgress from './ReadingProgress.astro';
+import SeoChecker from '~/components/common/SeoChecker.astro';
 
 import { getPermalink } from '~/utils/permalinks';
 import { getFormattedDate } from '~/utils/utils';
@@ -13,17 +16,20 @@ import type { Post } from '~/types';
 export interface Props {
   post: Post;
   url: string | URL;
+  headings?: Array<object>; // Terima props headings
 }
 
-const { post, url } = Astro.props;
+const { post, url, headings } = Astro.props;
 ---
 
 <section class="py-8 sm:py-16 lg:py-20 mx-auto">
+  <SeoChecker title={post.title} description={post.excerpt} />
+  <ReadingProgress />
   <article>
     <header
       class={post.image
         ? 'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade'
-        : 'intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade'}
+        : ''}
     >
       <div class="flex justify-between flex-col sm:flex-row max-w-3xl mx-auto mt-0 mb-2 px-4 sm:px-6 sm:items-center">
         <p>
@@ -33,8 +39,8 @@ const { post, url } = Astro.props;
             post.author && (
               <>
                 {' '}
-                · <Icon name="tabler:user" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />
-                <span class="inline-block">{post.author}</span>
+                · <Icon name="tabler:user" class="w-4 h-4 inline-block -mt-0.5 dark:text-gray-400" />{' '}
+                <span>{post.author}</span>
               </>
             )
           }
@@ -52,7 +58,8 @@ const { post, url } = Astro.props;
           {
             post.readingTime && (
               <>
-                &nbsp;· <span>{post.readingTime}</span> min read
+                {' '}
+                · <span>{post.readingTime}</span> min read
               </>
             )
           }
@@ -60,12 +67,13 @@ const { post, url } = Astro.props;
       </div>
 
       <h1
-        class="px-4 sm:px-6 max-w-3xl mx-auto text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
+        class="px-4 sm:px-6 max-w-4xl mx-auto text-center text-4xl md:text-5xl font-bold leading-tighter tracking-tighter font-heading"
       >
         {post.title}
       </h1>
+
       <p
-        class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-justify"
+        class="max-w-3xl mx-auto mt-4 mb-8 px-4 sm:px-6 text-xl md:text-2xl text-muted dark:text-slate-400 text-center"
       >
         {post.excerpt}
       </p>
@@ -90,14 +98,36 @@ const { post, url } = Astro.props;
         )
       }
     </header>
-    <div
-      class="mx-auto px-6 sm:px-6 max-w-3xl prose prose-md lg:prose-xl dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg mt-8 prose-headings:scroll-mt-[80px] prose-li:my-0"
-    >
-      <slot />
-    </div>
-    <div class="mx-auto px-6 sm:px-6 max-w-3xl mt-8 flex justify-between flex-col sm:flex-row">
-      <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
-      <SocialShare url={url} text={post.title} class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600" />
+
+    <div class="mx-auto px-4 sm:px-6 max-w-7xl mt-8 grid grid-cols-1 lg:grid-cols-12 gap-12">
+      <aside class="hidden lg:block lg:col-span-3 relative">
+        <div class="sticky top-24 transition-all duration-300">
+          {headings && headings.length > 0 && <TableOfContents headings={headings} />}
+        </div>
+      </aside>
+
+      <div class="lg:col-span-6">
+        <div
+          class="prose prose-lg max-w-none dark:prose-invert dark:prose-headings:text-slate-300 prose-headings:font-heading prose-headings:leading-tighter prose-headings:tracking-tighter prose-headings:font-bold prose-a:text-primary dark:prose-a:text-blue-400 prose-img:rounded-md prose-img:shadow-lg prose-headings:scroll-mt-[100px]"
+        >
+          <slot />
+        </div>
+
+        <div class="mt-8 flex justify-between flex-col sm:flex-row border-t border-gray-200 dark:border-slate-700 pt-4">
+          <PostTags tags={post.tags} class="mr-5 rtl:mr-0 rtl:ml-5" />
+          <SocialShare
+            url={url}
+            text={post.title}
+            class="mt-5 sm:mt-1 align-middle text-gray-500 dark:text-slate-600"
+          />
+        </div>
+      </div>
+
+      <aside class="lg:col-span-3 relative">
+        <div class="sticky top-24">
+          <AuthorProfile author={post.author} />
+        </div>
+      </aside>
     </div>
   </article>
 </section>
