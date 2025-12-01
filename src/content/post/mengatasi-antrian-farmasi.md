@@ -2,7 +2,7 @@
 publishDate: 2025-02-22T00:00:00Z
 title: 'Mengurai Benang Kusut Antrian Farmasi: Masalah Klasik RSUD'
 excerpt: Farmasi sering menjadi titik paling lambat (bottleneck) di Rumah Sakit. Temukan strategi memangkas waktu tunggu obat hingga 40%.
-image: ~/assets/images/hero-image.png
+image: ~/assets/images/blog/antrian-farmasi.png
 category: Manajemen RS
 tags:
   - farmasi

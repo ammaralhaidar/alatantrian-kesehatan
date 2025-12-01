@@ -2,7 +2,7 @@
 publishDate: 2025-02-20T00:00:00Z
 title: Cara Meningkatkan Skor Akreditasi RS dengan Sistem Antrian Terintegrasi Mobile JKN
 excerpt: Integrasi antrian online bukan sekadar tren, tapi syarat mutlak standar pelayanan minimal dan akreditasi paripurna di era digital BPJS.
-image: ~/assets/images/hero-image.png
+image: ~/assets/images/blog/akreditasi-rs.png
 category: Edukasi Regulasi
 tags:
   - akreditasi rs
